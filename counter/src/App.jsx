@@ -14,7 +14,7 @@ function App() {
  }
   let myarr= [1,2,3]
   //let counter = 20;
-  const addvalue =()=>{
+  const addvalue =()=>{ 
     // console.log("clicked",counter)
     // counter++;
     if(counter>=20){
