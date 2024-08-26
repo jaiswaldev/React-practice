@@ -4,27 +4,81 @@ function App() {
   const [length, setlength] = useState(4);
   const [numbers, setnumbers] = useState(false);
   const [char, setchar] = useState(false);
-  const [key, setkey] = useState("");
+  const [key, setkey] = useState(null);
   const keyref = useRef(null)
+  const [on, setOn] = useState(false);
 
 
-  const keygenerator = useCallback(() => {
+  const keygenerator = useCallback((length) => {
     let pss = "";
     let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    let num = "0123456789"
+    let number = "0123456789"
     let chart ="!@#$%~`^*"
+   
+   if(numbers && char){
+    let numstr =  Math.floor(Math.random() * (length -1)) + 1;
+    let numnumber =  Math.floor(Math.random()*(length - numstr-1)) + 1;
+    let numchart = length - numstr-numnumber;
+    
 
-    if (numbers) str += "0123456789";
-    if (char) str += "!@#$%~`^*";
-  
-
-    for(let i = 1; i <= length; i++){
-        let x = Math.floor(Math.random()*str.length);
-        
-        pss += str.charAt(x);
+    for (let i = 0; i < numstr; i++) {
+      const x = Math.floor(Math.random() * str.length);
+      pss += str.charAt(x);
     }
-    setkey(pss);
-  }, [length, numbers, char]);
+    for (let i = 0; i < numnumber; i++) {
+      const x = Math.floor(Math.random() * number.length);
+      pss += number.charAt(x);
+    }
+    for (let i = 0; i < numchart; i++) {
+      const x = Math.floor(Math.random() * chart.length);
+      pss += chart.charAt(x);
+    }
+    pss = pss.split('').sort(function(){return 0.5-Math.random()}).join('');
+   }
+
+   else if(numbers){
+    let numstr =  Math.floor(Math.random() * (length - 1)) + 1;
+    let numnumber =  length - numstr;
+  
+    
+
+    for (let i = 0; i < numstr; i++) {
+      const x = Math.floor(Math.random() * str.length);
+      pss += str.charAt(x);
+    }
+    for (let i = 0; i < numnumber; i++) {
+      const x = Math.floor(Math.random() * number.length);
+      pss += number.charAt(x);
+    }
+    pss = pss.split('').sort(function(){return 0.5-Math.random()}).join('');
+   }
+
+   else if(char){
+    let numstr =  Math.floor(Math.random() * (length - 1)) + 1;
+    let numchart =  length - numstr;
+  
+    
+
+    for (let i = 0; i < numstr; i++) {
+      const x = Math.floor(Math.random() * str.length);
+      pss += str.charAt(x);
+    }
+    for (let i = 0; i < numchart; i++) {
+      const x = Math.floor(Math.random() * chart.length);
+      pss += chart.charAt(x);
+    }
+    pss = pss.split('').sort(function(){return 0.5-Math.random()}).join('');
+   }
+   else{
+
+     for(let i = 1; i <= length; i++){
+         let x = Math.floor(Math.random()*str.length);
+         pss += str.charAt(x);
+     }
+   }
+   if(on) setkey(pss);
+   else setkey(null);
+  }, [on,length, numbers, char]);
 
   // keygenerator()   //we can't call this function here.
   
@@ -37,9 +91,14 @@ function App() {
 
 
   useEffect(()=>{
-    keygenerator()
-  },[length, numbers, char, keygenerator])
-  
+   
+    keygenerator(length)
+  },[on,length, numbers, char, keygenerator])
+
+  const handleOn = () => {
+    setOn(true);
+  }
+
  
   
 
@@ -101,12 +160,12 @@ function App() {
             </div>
           </div>
 
-          {/* <div className="flex items-center justify-center mt-3">
+          <div className="flex items-center justify-center mt-3">
             <button 
             className="bg-white p-2 rounded-xl"
-           
+            onClick={handleOn}
             >Start</button>
-          </div> */}
+          </div>
         </div>
       </div>
     </>
